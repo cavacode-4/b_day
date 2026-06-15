@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Natasha!</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; }
+  #stage {
+    position: relative; width: 100vw; height: 100vh; overflow: hidden;
+    background: #520240;
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+  canvas { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+
+  .screen {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; z-index: 2; padding: 20px;
+  }
+
+  .card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(0, 0, 0, 0.562);
+    border-radius: 20px;
+    padding: 28px 32px;
+    text-align: center;
+    max-width: 460px;
+    width: 100%;
+    color: #fff;
+  }
+
+  .photo-circle {
+    width: 110px; height: 110px; border-radius: 50%;
+    border: 3px solid #000000;
+    object-fit: cover; object-position: center top;
+    display: block; margin: 0 auto 14px;
+  }
+
+  .name-title {
+    font-size: 24px; font-weight: 700; color: #e9d5ff; margin-bottom: 8px;
+    letter-spacing: 2px;
+  }
+  .bio {
+    font-size: 13px; color: rgba(233,213,255,0.85); line-height: 1.7; margin-bottom: 20px;
+  }
+  .card h2 { font-size: 16px; font-weight: 600; color: #e9d5ff; margin-bottom: 4px; }
+  .card p.sub { font-size: 13px; color: rgba(255,255,255,0.55); margin-bottom: 16px; }
+
+  .ages-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .age-btn {
+    background: rgba(192,132,252,0.18);
+    border: 1px solid rgba(4, 0, 8, 0.4);
+    border-radius: 8px; padding: 10px 0;
+    font-size: 15px; font-weight: 600; color: #e9d5ff;
+    cursor: pointer; transition: background 0.10s, transform 0.1s;
+  }
+  .age-btn:hover { background: rgba(192,132,252,0.4); transform: scale(1.05); }
+  .age-btn:active { transform: scale(0.97); }
+
+  .result-photo {
+    width: 120px; height: 120px; border-radius: 50%;
+    border: 4px solid #000000;
+    object-fit: cover; object-position: center top;
+    margin: 0 auto 16px;
+    display: block;
+  }
+  .result-msg { font-size: 26px; font-weight: 700; color: #f3e8ff; margin-bottom: 8px; }
+  .result-sub { font-size: 14px; color: rgba(233,213,255,0.75); max-width: 320px; line-height: 1.6; margin-bottom: 20px; }
+
+  .play-again {
+    background: rgba(192,132,252,0.25);
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 10px; padding: 10px 28px;
+    font-size: 14px; font-weight: 600; color: #e9d5ff;
+    cursor: pointer; transition: background 0.10s;
+  }
+  .play-again:hover { background: rgba(192,132,252,0.45); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="cv"></canvas>
+
+  <div class="screen" id="intro-screen"></div>
+
+  <div class="screen" id="game-screen" style="display:none;">
+    <div class="card">
+      <img class="photo-circle" src="nat.jpg" alt="Natasha">
+      <div class="name-title">NATASHA </div>
+      <p class="bio">
+        This one's all for you,Your energy is contagious and the world is lucky to have you in it.
+        Angola awaits your arrival 💜
+      </p>
+      <h2>How old are you turning?</h2>
+      <p class="sub">Pick your age and watch the magic ✨</p>
+      <div class="ages-grid" id="ages-grid"></div>
+    </div>
+  </div>
+
+  <div class="screen" id="result-screen" style="display:none; text-align:center;">
+    <img class="result-photo" src="nat.jpg" alt="Natasha">
+    <div class="result-msg" id="result-msg"></div>
+    <div class="result-sub" id="result-sub"></div>
+    <button class="play-again" onclick="playAgain()">Play again</button>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('cv');
+const ctx = canvas.getContext('2d');
+const stage = document.getElementById('stage');
+let W, H, particles = [], phase = 'intro', introTimer;
+
+function resize() { W = canvas.width = stage.offsetWidth; H = canvas.height = stage.offsetHeight; }
+resize(); window.addEventListener('resize', resize);
+
+const COLORS = ['#f472b6','#c084fc','#a78bfa','#e879f9','#fb7185','#fbbf24','#f9a8d4','#d946ef'];
+function rand(a,b){return a+Math.random()*(b-a);}
+
+class Particle {
+  constructor(x,y,burst){
+    this.type=Math.random()<0.4?'heart':'confetti';
+    this.x=x??rand(0,W); this.y=y??rand(H+10,H+60);
+    this.vx=burst?rand(-6,6):rand(-1.5,1.5);
+    this.vy=burst?-rand(4,10):-rand(2,5);
+    this.color=COLORS[Math.floor(rand(0,COLORS.length))];
+    this.size=this.type==='heart'?rand(10,22):rand(6,13);
+    this.rot=rand(0,Math.PI*2); this.rspeed=rand(-0.06,0.06);
+    this.alpha=1; this.life=rand(80,150); this.age=0;
+    this.w=rand(6,13); this.h=rand(4,9); this.shape=Math.floor(rand(0,3));
+  }
+  update(){
+    this.x+=this.vx; this.vy+=0.045; this.y+=this.vy;
+    this.rot+=this.rspeed; this.age++;
+    if(this.age>this.life*0.7) this.alpha=1-(this.age-this.life*0.7)/(this.life*0.3);
+    return this.age<this.life&&this.y<H+60;
+  }
+  draw(c){
+    c.save(); c.globalAlpha=Math.max(0,this.alpha);
+    c.translate(this.x,this.y); c.rotate(this.rot); c.fillStyle=this.color;
+    if(this.type==='heart'){
+      const s=this.size/30; c.scale(s,s);
+      c.beginPath(); c.moveTo(0,-8);
+      c.bezierCurveTo(0,-14,-12,-14,-12,-4);
+      c.bezierCurveTo(-12,4,0,12,0,18);
+      c.bezierCurveTo(0,12,12,4,12,-4);
+      c.bezierCurveTo(12,-14,0,-14,0,-8);
+      c.closePath(); c.fill();
+    } else {
+      if(this.shape===0) c.fillRect(-this.w/2,-this.h/2,this.w,this.h);
+      else if(this.shape===1){c.beginPath();c.arc(0,0,this.size/2,0,Math.PI*2);c.fill();}
+      else{c.beginPath();c.moveTo(0,-this.h);c.lineTo(this.w/2,this.h/2);c.lineTo(-this.w/2,this.h/2);c.closePath();c.fill();}
+    }
+    c.restore();
+  }
+}
+
+function spawnBg(){for(let i=0;i<2;i++) particles.push(new Particle());}
+function burst(cx,cy){for(let i=0;i<90;i++) particles.push(new Particle(cx,cy,true));}
+
+function loop(){
+  ctx.clearRect(0,0,W,H);
+  if(phase==='intro') spawnBg();
+  particles=particles.filter(p=>{const a=p.update();p.draw(ctx);return a;});
+  requestAnimationFrame(loop);
+}
+
+function fadeOut(el,cb){
+  el.style.transition='opacity 0.6s'; el.style.opacity='0';
+  setTimeout(()=>{el.style.display='none';el.style.opacity='1';el.style.transition='';cb&&cb();},640);
+}
+function fadeIn(el){
+  el.style.opacity='0'; el.style.transition='opacity 0.7s';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>el.style.opacity='1'));
+  setTimeout(()=>el.style.transition='',750);
+}
+
+function suffix(n){
+  if(n>=11&&n<=13) return n+'th';
+  switch(n%10){case 1:return n+'st';case 2:return n+'nd';case 3:return n+'rd';default:return n+'th';}
+}
+
+const intro=document.getElementById('intro-screen');
+const gameEl=document.getElementById('game-screen');
+const resultEl=document.getElementById('result-screen');
+
+function startIntro(){
+  phase='intro'; particles=[];
+  intro.style.display='flex'; gameEl.style.display='none'; resultEl.style.display='none';
+  clearTimeout(introTimer);
+  introTimer=setTimeout(()=>{
+    fadeOut(intro,()=>{phase='game';gameEl.style.display='flex';fadeIn(gameEl);});
+  },3200);
+}
+
+function pickAge(age,btn){
+  const r=btn.getBoundingClientRect(),sr=stage.getBoundingClientRect();
+  burst(r.left-sr.left+r.width/2,r.top-sr.top+r.height/2);
+  const msgs=['Keep being amazing, Natasha!','Angola awaits you!','Your laugh makes everything better!','Motivated, funny & unstoppable!','You deserve all the love today!'];
+  document.getElementById('result-msg').textContent='Happy '+suffix(age)+' Birthday, Natasha!';
+  document.getElementById('result-sub').textContent=msgs[Math.floor(Math.random()*msgs.length)];
+  gameEl.style.display='none'; resultEl.style.display='flex'; fadeIn(resultEl);
+}
+
+function playAgain(){fadeOut(resultEl,startIntro);}
+
+const grid=document.getElementById('ages-grid');
+for(let a=10;a<=25;a++){
+  const b=document.createElement('button');
+  b.className='age-btn'; b.textContent=a;
+  b.onclick=()=>pickAge(a,b);
+  grid.appendChild(b);
+}
+
+loop(); startIntro();
+</script>
+</body>
+</html>
