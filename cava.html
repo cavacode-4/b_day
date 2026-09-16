@@ -508,7 +508,7 @@ const giftContent = {
     title: "a song for you",
     render: () => `<div class="player">
         <div class="track">♪ now playing — add your song title here</div>
-        <iframe src="https://youtu.be/LpkcGCbu3MU?si=QE4J0R-d22TlCiws" title="song for you" allowfullscreen></iframe>
+        <iframe src="https://youtube.com/embed/E6fn_Q9Cb3Q&si=QBD1WUjPnnZkN4lj" title="song for you" allowfullscreen></iframe>
         <div style="font-size:14px;margin-top:8px;">(swap the video ID in the code for your real song!)</div>
       </div>`
   },
@@ -522,17 +522,17 @@ const giftContent = {
 };
 let openedCount = 0;
 /* Set your favorite photo here: a filename/URL for the image, and a short caption. */
-const FAVORITE_PHOTO_SRC = "";
+const FAVORITE_PHOTO_SRC = "2.JPG.jpeg";
 const FAVORITE_PHOTO_CAPTION = "this one. always this one.";
 
 /* ---------- photo gallery ----------
    Replace src (or leave emoji) and caption for each photo below.
    Add more objects to the array for more photos. */
 const photos = [
-  { src: "", emoji: "🌅", caption: "our first date" },
-  { src: "", emoji: "🎡", caption: "that trip we took" },
-  { src: "", emoji: "🍜", caption: "our favorite spot" },
-  { src: "", emoji: "🥳", caption: "your last birthday" },
+  { src: "4.jpg.jpeg", emoji: "🌅", caption: "our first date" },
+  { src: "5.jpg.jpeg", emoji: "🎡", caption: "that trip we took" },
+  { src: "3.JPG.jpeg", emoji: "🍜", caption: "our favorite spot" },
+  { src: "1.JPG.jpeg", emoji: "🥳", caption: "your last birthday" },
 ];
 let galleryIndex = 0;
 function renderGallery(){
