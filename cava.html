@@ -515,24 +515,24 @@ const giftContent = {
   favpic: {
     title: "my favorite picture of you",
     render: () => `<div class="photo-frame">
-        <div class="ph">${FAVORITE_PHOTO_SRC ? `<img src="1.jpg" alt="favorite picture">` : '📷'}</div>
+        <div class="ph">${FAVORITE_PHOTO_SRC ? `<img src="${FAVORITE_PHOTO_SRC}" alt="favorite picture">` : '📷'}</div>
         <div style="margin-top:8px;text-align:center;">${FAVORITE_PHOTO_CAPTION}</div>
       </div>`
   }
 };
 let openedCount = 0;
 /* Set your favorite photo here: a filename/URL for the image, and a short caption. */
-const FAVORITE_PHOTO_SRC = "2.JPG";
+const FAVORITE_PHOTO_SRC = "2.JPG.jpeg";
 const FAVORITE_PHOTO_CAPTION = "this one. always this one.";
 
 /* ---------- photo gallery ----------
    Replace src (or leave emoji) and caption for each photo below.
    Add more objects to the array for more photos. */
 const photos = [
-  { src: "4.jpg", emoji: "🌅", caption: "our first date" },
-  { src: "5.jpg.jpeg", emoji: "🎡", caption: "that trip we took" },
+  { src: "1.jpg.jpeg", emoji: "🌅", caption: "our first date" },
+  { src: "2.JPG.jpeg", emoji: "🎡", caption: "that trip we took" },
   { src: "3.JPG.jpeg", emoji: "🍜", caption: "our favorite spot" },
-  { src: "1.JPG.jpeg", emoji: "🥳", caption: "your last birthday" },
+  { src: "4.jpg.jpeg", emoji: "🥳", caption: "your last birthday" },
 ];
 let galleryIndex = 0;
 function renderGallery(){
@@ -542,7 +542,7 @@ function renderGallery(){
   const thumbsWrap = document.getElementById('gallery-thumbs');
   if(!main) return;
   const p = photos[galleryIndex];
-  main.innerHTML = p.src ? `<img src="2" alt="${p.caption}">` : p.emoji;
+  main.innerHTML = p.src ? `<img src="${p.src}" alt="${p.caption}">` : p.emoji;
   cap.textContent = p.caption;
   dotsWrap.innerHTML = "";
   photos.forEach((_,i)=>{
@@ -555,7 +555,7 @@ function renderGallery(){
   photos.forEach((ph,i)=>{
     const t=document.createElement('div');
     t.className = 'ph' + (i===galleryIndex ? ' on' : '');
-    t.innerHTML = ph.src ? `<img src="3" alt="${ph.caption}">` : ph.emoji;
+    t.innerHTML = ph.src ? `<img src="${ph.src}" alt="${ph.caption}">` : ph.emoji;
     t.onclick = ()=>{ galleryIndex=i; renderGallery(); };
     thumbsWrap.appendChild(t);
   });
