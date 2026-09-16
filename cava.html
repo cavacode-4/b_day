@@ -262,7 +262,7 @@
       <h2 class="pixel">enter the password</h2>
       <div class="dots" id="dots"></div>
       <div class="pad" id="pad"></div>
-      <div class="hint">hint: it's 04s special number 💗</div>
+      <div class="hint">hint: it's 04s favorite number x4 </div>
     </div>
   </section>
 
@@ -290,7 +290,7 @@
       and my life so much happier just by being in it.<br><br>
       I hope this year brings you everything you deserve — and more.
       Thank you for being exactly who you are.<br><br>
-      I love you more than words (or pixels) can really show.
+      I love you more than words can really show.
       <div class="sig">— always yours 💗</div>
     </div>
     <button class="btn" id="letter-continue" style="display:none;" onclick="goTo('gifts')">CONTINUE</button>
@@ -500,16 +500,16 @@ const giftContent = {
   letter: {
     title: "a note for you",
     render: () => `<div class="letterpaper" style="font-size:18px;">
-        Every gift box on this page has a little piece of me in it —
+        Every gift box on this page has a little piece of you in it —
         this one's just a reminder that I love you, today and always.
       </div>`
   },
   song: {
     title: "a song for you",
     render: () => `<div class="player">
-        <div class="track">♪ now playing — add your song title here</div>
+        <div class="track">♪ now playing — addicted</div>
         <iframe src="https://www.youtube.com/embed/E6fn_Q9Cb3Q?si=QBD1WUjPnnZkN4lj" title="song for you" allowfullscreen></iframe>
-        <div style="font-size:14px;margin-top:8px;">(swap the video ID in the code for your real song!)</div>
+        <div style="font-size:14px;margin-top:8px;"></div>
       </div>`
   },
   favpic: {
@@ -522,17 +522,17 @@ const giftContent = {
 };
 let openedCount = 0;
 /* Set your favorite photo here: a filename/URL for the image, and a short caption. */
-const FAVORITE_PHOTO_SRC = "2.JPG.jpeg";
+const FAVORITE_PHOTO_SRC = "6.jpg.jpeg";
 const FAVORITE_PHOTO_CAPTION = "this one. always this one.";
 
 /* ---------- photo gallery ----------
    Replace src (or leave emoji) and caption for each photo below.
    Add more objects to the array for more photos. */
 const photos = [
-  { src: "1.jpg.jpeg", emoji: "🌅", caption: "our first date" },
-  { src: "2.JPG.jpeg", emoji: "🎡", caption: "that trip we took" },
+  { src: "5.jpg.jpeg", emoji: "🌅", caption: "our first date" },
+  { src: "1.JPG.jpeg", emoji: "🎡", caption: "looking left cos Im never right" },
   { src: "3.JPG.jpeg", emoji: "🍜", caption: "our favorite spot" },
-  { src: "4.jpg.jpeg", emoji: "🥳", caption: "your last birthday" },
+  { src: "4.jpg.jpeg", emoji: "🥳", caption: "peak" },
 ];
 let galleryIndex = 0;
 function renderGallery(){
